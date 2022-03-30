@@ -8,6 +8,7 @@ import { userQuery } from "../utils/data";
 import { Sidebar, UserProfile } from "../components";
 import { client } from "../client";
 import logo from "../assets/logo.png";
+import { fetchUser } from "../utils/fetchUser";
 
 const Home = () => {
   const [toggleSidebar, setToggleSidebar] = useState(false);
@@ -15,10 +16,7 @@ const Home = () => {
   const scrollRef = useRef(null);
 
   // pull userInfo from local storage
-  const userInfo =
-    localStorage.getItem("user") !== "undefined"
-      ? JSON.parse(localStorage.getItem("user"))
-      : localStorage.clear();
+  const userInfo = fetchUser();
 
   // get user from sanity rather than relying on local storage
   useEffect(() => {
