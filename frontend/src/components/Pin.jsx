@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { MdDownloadForOffline } from "react-icons/md";
-import { AiTwoToneDelete } from "react-icons/ai";
+import { AiTwotoneDelete } from "react-icons/ai";
 import { BsFillArrowUpRightCircleFill } from "react-icons/bs";
 
 import { client, urlFor } from "../client";
@@ -10,21 +10,52 @@ import { fetchUser } from "../utils/fetchUser";
 
 const Pin = ({ pin: { postedBy, image, _id, destination, save } }) => {
   const [postHovered, setPostHovered] = useState(false);
-  const [savingPost, setSavingPost] = useState(false);
+  // const [savingPost, setSavingPost] = useState(false);
 
   const navigate = useNavigate();
 
   // pull userInfo from local storage
   const user = fetchUser();
 
-  const alreadySaved = (save?.filter(
+  // console.log(save);
+
+  const alreadySaved = !!save?.filter(
     (item) => item.postedBy._id === user.googleId
-  )).length;
+  )?.length;
 
   /**
-   * 1,[2, 3, 4] -> [1].length -> 1
-   * 4,[1, 5, 7] -> [].length -> 0
+   * 1,[2, 3, 4] -> [1].length -> 1 -> !1 -> false -> !false -> true
+   * 4,[1, 5, 7] -> [].length -> 0 -> !0 -> true -> !true -> false
    */
+
+  const savePin = (id) => {
+    if (!alreadySaved) {
+      // setSavingPost(true);
+      // update the document in sanity db
+      client
+        .patch(id)
+        .setIfMissing({ save: [] })
+        .insert("after", "save[-1]", [
+          {
+            _key: uuidv4(),
+            userId: user.googleId,
+            postedBy: {
+              _type: postedBy,
+              _ref: user.googleId,
+            },
+          },
+        ])
+        .commit()
+        .then(() => {
+          window.location.reload();
+          // setSavingPost(false);
+        });
+    }
+  };
+
+  const deletePin = (id) => {
+    client.delete(id).then(() => window.location.reload());
+  };
 
   return (
     <div className="m-2">
@@ -56,15 +87,67 @@ const Pin = ({ pin: { postedBy, image, _id, destination, save } }) => {
                 </a>
               </div>
               {/* Check if the user already save the post */}
-              {alreadySaved?.length !== 0 ? (
-                <button>Saved</button>
+              {alreadySaved ? (
+                <button
+                  type="button"
+                  className="px-5 py-1 text-base font-bold text-white bg-red-500 outline-none opacity-70 hover:opacity-100 rounded-3xl hover:shadow-md"
+                >
+                  {save?.length} &nbsp; Saved
+                </button>
               ) : (
-                <button>Save</button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    savePin(_id);
+                  }}
+                  className="px-5 py-1 text-base font-bold text-white bg-red-500 outline-none opacity-70 hover:opacity-100 rounded-3xl hover:shadow-md"
+                >
+                  Save
+                </button>
+              )}
+            </div>
+            <div className="flex items-center justify-between w-full gap-2">
+              {destination && (
+                <a
+                  href={destination}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 p-2 pl-4 pr-4 font-bold text-black bg-white rounded-full opacity-70 hover:opacity-100 hover:shadow-md"
+                >
+                  <BsFillArrowUpRightCircleFill />
+                  {destination.length > 20
+                    ? destination.slice(8, 18)
+                    : destination.slice(8)}
+                </a>
+              )}
+              {postedBy?._id === user.googleId && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deletePin(_id);
+                  }}
+                  className="p-2 text-base font-bold bg-white outline-none text-dark opacity-70 hover:opacity-100 rounded-3xl hover:shadow-md"
+                >
+                  <AiTwotoneDelete />
+                </button>
               )}
             </div>
           </div>
         )}
       </div>
+      <Link
+        to={`user-profile/${postedBy?._id}`}
+        className="flex items-center gap-2 mt-2"
+      >
+        <img
+          className="object-cover w-8 h-8 rounded-full"
+          src={postedBy?.image}
+          alt="user-profile"
+        ></img>
+        <p className="font-semibold capitalize">{postedBy?.userName}</p>
+      </Link>
     </div>
   );
 };
