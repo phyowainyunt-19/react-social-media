@@ -22,6 +22,16 @@ export const categories = [
       "https://i.pinimg.com/750x/66/b1/29/66b1296d36598122e6a4c5452b5a7149.jpg",
   },
   {
+    name: "tv-series",
+    image:
+      "https://i.pinimg.com/750x/24/f2/dd/24f2ddf8f9f5da59649c0123677e367d.jpg",
+  },
+  {
+    name: "movies",
+    image:
+      "https://i.pinimg.com/750x/cf/c8/99/cfc899bbb210026bcb64c32ce80dd9ac.jpg",
+  },
+  {
     name: "photo",
     image:
       "https://i.pinimg.com/236x/72/8c/b4/728cb43f48ca762a75da645c121e5c57.jpg",

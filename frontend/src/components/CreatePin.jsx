@@ -19,8 +19,9 @@ const CreatePin = ({ user }) => {
 
   const navigate = useNavigate();
 
+  // Image Upload
   const uploadImage = (e) => {
-    const { type } = e.target.files[0];
+    const { type, name } = e.target.files[0];
 
     if (
       type === "image/png" ||
@@ -31,8 +32,58 @@ const CreatePin = ({ user }) => {
     ) {
       setWrongImageType(false);
       setLoading(true);
+
+      // correct image type => client assets -> call upload method
+      client.assets
+        .upload("image", e.target.files[0], {
+          contentType: type,
+          filename: name,
+        })
+        .then((document) => {
+          setImageAsset(document);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log("Image Upload Error", error);
+        });
     } else {
       setWrongImageType(true);
+    }
+  };
+
+  // Save Pin
+  /**
+   * images are stored as assets in sanity
+   * that's why we need to expand image reference
+   */
+  const savePin = () => {
+    if (title && about && destination && imageAsset?._id && category) {
+      const doc = {
+        _type: "pin",
+        title,
+        about,
+        destination,
+        image: {
+          _type: "image",
+          asset: {
+            _type: "reference",
+            _ref: imageAsset?._id,
+          },
+        },
+        userId: user._id,
+        postedBy: {
+          _type: "postedBy",
+          _ref: user._id,
+        },
+        category,
+      };
+      client.create(doc).then(() => {
+        navigate("/");
+      });
+    } else {
+      setFields(true);
+
+      setTimeout(() => setFields(false), 3000);
     }
   };
 
@@ -69,8 +120,95 @@ const CreatePin = ({ user }) => {
                 />
               </label>
             ) : (
-              <p>something else</p>
+              <div className="relative h-full">
+                <img
+                  src={imageAsset?.url}
+                  alt="uploaded-pic"
+                  className="w-full h-full"
+                />
+                <button
+                  type="button"
+                  className="absolute p-3 text-xl transition-all duration-500 ease-in-out bg-white rounded-full outline-none cursor-pointer bottom-3 right-3 hover:shadow-md"
+                  onClick={() => setImageAsset(null)}
+                >
+                  <MdDelete />
+                </button>
+              </div>
             )}
+          </div>
+        </div>
+
+        {/* Form for all other informations about our input */}
+        <div className="flex flex-col flex-1 w-full gap-6 mt-5 lg:pl-5">
+          {/* Title */}
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Add your title here"
+            className="p-2 text-2xl font-bold border-b-2 border-gray-200 outline-none sm:text-3xl"
+          />
+          {user && (
+            <div className="flex items-center gap-2 my-2 bg-white rounded-lg">
+              <img
+                src={user?.image}
+                className="w-10 h-10 rounded-full"
+                alt="user-profile"
+              />
+              <p className="font-bold">{user.userName}</p>
+            </div>
+          )}
+          {/* About */}
+          <input
+            type="text"
+            value={about}
+            onChange={(e) => setAbout(e.target.value)}
+            placeholder="What is your pin about"
+            className="p-2 text-base border-b-2 border-gray-200 outline-none sm:text-lg"
+          />
+          {/* Destination */}
+          <input
+            type="text"
+            value={destination}
+            onChange={(e) => setDestination(e.target.value)}
+            placeholder="Add a destination link"
+            className="p-2 text-base border-b-2 border-gray-200 outline-none sm:text-lg"
+          />
+
+          <div className="flex flex-col">
+            <div>
+              <p className="mb-2 font-semibold text:lg sm:text-xl">
+                Choose Pin Category
+              </p>
+              <select
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-4/5 p-2 text-base border-b-2 border-gray-200 rounded-md outline-none cursor-pointer"
+              >
+                <option value="other" className="bg-white">
+                  Select Category
+                </option>
+                {/* Map over all of the categories */}
+                {categories.map((category, i) => (
+                  <option
+                    key={i}
+                    value={category.name}
+                    className="text-base text-black capitalize bg-white border-0 outline-none"
+                  >
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {/* save pin button */}
+            <div className="flex items-end justify-end mt-5">
+              <button
+                type="button"
+                onClick={savePin}
+                className="p-2 font-bold text-white bg-red-500 rounded-full outline-none w-28"
+              >
+                Save Pin
+              </button>
+            </div>
           </div>
         </div>
       </div>
