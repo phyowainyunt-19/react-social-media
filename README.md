@@ -1,5 +1,5 @@
 # Social Media Application
-![Layout](https://i.ibb.co/3BddHsW/shareme.png) 
+![Layout](https://i.ibb.co/9sggjv2/shareme.png)
 
 ## Introduction
 
