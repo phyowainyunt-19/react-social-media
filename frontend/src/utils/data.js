@@ -1,25 +1,15 @@
 // fetch sanity data from here
 
 export const categories = [
+  // {
+  //   name: "cars",
+  //   image:
+  //     "https://i.pinimg.com/750x/eb/47/44/eb4744eaa3b3ccd89749fa3470e2b0de.jpg",
+  // },
   {
-    name: "cars",
+    name: "k-pop",
     image:
-      "https://i.pinimg.com/750x/eb/47/44/eb4744eaa3b3ccd89749fa3470e2b0de.jpg",
-  },
-  {
-    name: "fitness",
-    image:
-      "https://i.pinimg.com/236x/25/14/29/251429345940a47490cc3d47dfe0a8eb.jpg",
-  },
-  {
-    name: "wallpaper",
-    image:
-      "https://i.pinimg.com/236x/03/48/b6/0348b65919fcbe1e4f559dc4feb0ee13.jpg",
-  },
-  {
-    name: "websites",
-    image:
-      "https://i.pinimg.com/750x/66/b1/29/66b1296d36598122e6a4c5452b5a7149.jpg",
+      "https://i.pinimg.com/originals/18/78/a1/1878a17feefe6487dcaf46a3e05d8ac2.jpg",
   },
   {
     name: "tv-series",
@@ -30,11 +20,6 @@ export const categories = [
     name: "movies",
     image:
       "https://i.pinimg.com/750x/cf/c8/99/cfc899bbb210026bcb64c32ce80dd9ac.jpg",
-  },
-  {
-    name: "photo",
-    image:
-      "https://i.pinimg.com/236x/72/8c/b4/728cb43f48ca762a75da645c121e5c57.jpg",
   },
   {
     name: "food",
@@ -57,11 +42,6 @@ export const categories = [
       "https://i.pinimg.com/236x/fa/95/98/fa95986f2c408098531ca7cc78aee3a4.jpg",
   },
   {
-    name: "quotes",
-    image:
-      "https://i.pinimg.com/236x/46/7c/17/467c17277badb00b638f8ec4da89a358.jpg",
-  },
-  {
     name: "cats",
     image:
       "https://i.pinimg.com/236x/6c/3c/52/6c3c529e8dadc7cffc4fddedd4caabe1.jpg",
@@ -70,6 +50,11 @@ export const categories = [
     name: "dogs",
     image:
       "https://i.pinimg.com/236x/1b/c8/30/1bc83077e363db1a394bf6a64b071e9f.jpg",
+  },
+  {
+    name: "coding",
+    image:
+      "https://i.pinimg.com/236x/67/18/6d/67186d954b4ec79411cf02ab5851957d.jpg",
   },
   {
     name: "other",

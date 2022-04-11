@@ -5,20 +5,13 @@ import { IoIosArrowForward } from "react-icons/io";
 
 import logo from "../assets/logo.png";
 
+import { categories } from "../utils/data";
+
 const isNotActiveStyle =
   "flex items-center px-5 gap-3 text-gray-500 hover:text-black transition-all duration-200 ease-in-out capitalize";
 
 const isActiveStyle =
   "flex items-center gap-3 px-5 font-extrabold capitalize transition-all duration-200 ease-in-out border-r-2 border-black";
-
-const categories = [
-  { name: "Photography" },
-  { name: "Coding" },
-  { name: "Kpop" },
-  { name: "Wallpapers" },
-  { name: "Gaming" },
-  { name: "Other" },
-];
 
 const Sidebar = ({ user, closeToggle }) => {
   const handleCloseSidebar = () => {
@@ -57,6 +50,11 @@ const Sidebar = ({ user, closeToggle }) => {
               onClick={handleCloseSidebar}
               key={category.name}
             >
+              <img
+                src={category.image}
+                alt="category-img"
+                className="w-8 h-8 rounded-full shadow-sm"
+              />
               {category.name}
             </NavLink>
           ))}

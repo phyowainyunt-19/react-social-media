@@ -3,7 +3,7 @@ import * as Loader from "react-loader-spinner";
 
 const Spinner = ({ message }) => {
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full">
+    <div className="flex flex-col items-center justify-center w-full h-full mt-5">
       <Loader.Circles
         type="Circles"
         color="#00BFFF"
